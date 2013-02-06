@@ -1,0 +1,46 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="ulabox_gearman.metadata_factory.class">Metadata\MetadataFactory</parameter>
+        <parameter key="ulabox_gearman.metadata.annotation_driver.class">Ulabox\Bundle\GearmanBundle\Metadata\Driver\AnnotationDriver</parameter>
+
+        <parameter key="ulabox_gearman.loader.worker.class">Ulabox\Bundle\GearmanBundle\Loader\WorkerLoader</parameter>
+        <parameter key="ulabox_gearman.loader.client.class">Ulabox\Bundle\GearmanBundle\Loader\ClientLoader</parameter>
+
+        <parameter key="ulabox_gearman.executor.worker.class">Ulabox\Bundle\GearmanBundle\Worker\WorkerExecutor</parameter>
+
+        <parameter key="ulabox_gearman.manager.class">Ulabox\Bundle\GearmanBundle\Manager\GearmanManager</parameter>
+    </parameters>
+
+    <services>
+        <service id="ulabox_gearman.metadata.annotation_driver" class="%ulabox_gearman.metadata.annotation_driver.class%">
+            <argument type="service" id="annotation_reader" />
+        </service>
+        <service id="ulabox_gearman.metadata_factory" class="%ulabox_gearman.metadata_factory.class%">
+            <argument type="service" id="ulabox_gearman.metadata.annotation_driver" />
+        </service>
+
+        <service id="ulabox_gearman.loader.worker" class="%ulabox_gearman.loader.worker.class%">
+            <argument type="service" id="ulabox_gearman.metadata_factory" />
+        </service>
+
+        <service id="ulabox_gearman.executor.worker" class="%ulabox_gearman.executor.worker.class%">
+            <argument type="service" id="ulabox_gearman.metadata_factory" />
+        </service>
+
+        <service id="ulabox_gearman.loader.client" class="%ulabox_gearman.loader.client.class%">
+            <argument type="service" id="ulabox_gearman.metadata_factory" />
+        </service>
+
+        <service id="ulabox_gearman.manager" class="%ulabox_gearman.manager.class%">
+        	<argument type="service" id="kernel" />
+            <argument type="service" id="ulabox_gearman.loader.worker" />
+            <argument type="service" id="ulabox_gearman.loader.client" />
+        </service>
+    </services>
+
+</container>

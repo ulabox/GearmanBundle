@@ -1,0 +1,30 @@
+{
+    "name": "ulabox/gearman-bundle",
+    "type": "symfony-bundle",
+    "description": "Gearman support for Symfony2.",
+    "keywords": ["gearman", "work", "job"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ivannis Suárez Jérez",
+            "email": "ivan@ulabox.com",
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "symfony/framework-bundle":  "~2.1",
+        "doctrine/common":           ">=2.2.0,<2.5-dev",
+        "jms/metadata":              "dev-master"
+    },
+    "require-dev": {
+        "phpspec/phpspec2":     "dev-develop",
+        "phpspec/php-diff":     "dev-master"
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "autoload": {
+        "psr-0": { "Ulabox\\Bundle\\GearmanBundle": "" }
+    },
+    "target-dir": "Ulabox/Bundle/GearmanBundle"
+}
