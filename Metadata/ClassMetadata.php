@@ -7,6 +7,9 @@ use Doctrine\Common\Collections\Collection;
 use Metadata\ClassMetadata as BaseClassMetadata;
 use Metadata\MethodMetadata;
 
+/**
+ * Metadata class
+ */
 class ClassMetadata extends BaseClassMetadata
 {
     /**
@@ -36,6 +39,13 @@ class ClassMetadata extends BaseClassMetadata
      * @var string
      */
     protected $servers;
+
+    /**
+     * Worker iterations
+     *
+     * @var integer
+     */
+    protected $workerIterations = 100;
 
     /**
      * Client tasks name
@@ -203,7 +213,28 @@ class ClassMetadata extends BaseClassMetadata
     public function getWorkerSlug()
     {
         $className = substr($this->name, strrpos($this->name, '\\') + 1);
+
         return $this->bundleName.':'.$className;
+    }
+
+    /**
+     * Return the worker iterations
+     *
+     * @return integer
+     */
+    public function getWorkerIterations()
+    {
+        return $this->workerIterations;
+    }
+
+    /**
+     * Set the worker iterations
+     *
+     * @param integer $iterations
+     */
+    public function setWorkerIterations($iterations)
+    {
+        $this->workerIterations = $iterations;
     }
 
     /**
@@ -218,6 +249,8 @@ class ClassMetadata extends BaseClassMetadata
 
     /**
      * Get job list for this worker
+     *
+     * @return ArrayCollection
      */
     public function getJobs()
     {
@@ -282,6 +315,8 @@ class ClassMetadata extends BaseClassMetadata
 
     /**
      * Get methods list for this class
+     *
+     * @return ArrayCollection
      */
     public function getMethods()
     {
@@ -332,8 +367,9 @@ class ClassMetadata extends BaseClassMetadata
     public function hasMethod($method)
     {
         foreach ($this->methods as $methodMetadata) {
-            if ($methodMetadata->name == $method)
+            if ($methodMetadata->name == $method) {
                 return true;
+            }
         }
 
         return false;

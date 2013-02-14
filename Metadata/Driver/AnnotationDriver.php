@@ -7,6 +7,9 @@ use Doctrine\Common\Annotations\Reader;
 use Metadata\Driver\DriverInterface;
 use Metadata\MethodMetadata;
 
+/**
+ * AnnotationDriver class
+ */
 class AnnotationDriver implements DriverInterface
 {
     /**
@@ -39,9 +42,11 @@ class AnnotationDriver implements DriverInterface
             'Ulabox\\Bundle\\GearmanBundle\\Annotation\\Worker'
         );
 
-        if ($classAnnotation !== null) { // is a worker?
+        // is a worker?
+        if ($classAnnotation !== null) {
             // register servers and mark as worker
             $classMetadata->setServers($classAnnotation->getServers());
+            $classMetadata->setWorkerIterations($classAnnotation->getIterations());
             $classMetadata->setWorker(true);
         }
 
@@ -51,14 +56,15 @@ class AnnotationDriver implements DriverInterface
             'Ulabox\\Bundle\\GearmanBundle\\Annotation\\Client'
         );
 
-        if ($classAnnotation !== null) { // is a client?
+        // is a client?
+        if ($classAnnotation !== null) {
             // register servers, tasks and mark as client
             $classMetadata->setServers($classAnnotation->getServers());
             $classMetadata->setTasks($classAnnotation->getTasks());
             $classMetadata->setClient(true);
 
-            // register worker name
-            if ($classAnnotation->getWorkerName() === null) { // no has a worker name?
+            // no has a worker name?
+            if ($classAnnotation->getWorkerName() === null) {
                 // suggest a name
                 $suggestName = str_replace(
                     'Client',
@@ -80,9 +86,12 @@ class AnnotationDriver implements DriverInterface
                 'Ulabox\\Bundle\\GearmanBundle\\Annotation\\Job'
             );
 
-            if ($methodAnnotation !== null) { // is a job?
-                if ($name = $methodAnnotation->getName()) // has a job name?
+            // is a job?
+            if ($methodAnnotation !== null) {
+                // has a job name?
+                if ($name = $methodAnnotation->getName()) {
                     $methodMetadata->name = $name; // then replace default name
+                }
 
                 // add this method as a job
                 $classMetadata->addJob($methodMetadata);

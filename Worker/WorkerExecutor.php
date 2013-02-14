@@ -36,6 +36,13 @@ class WorkerExecutor
     protected $metadataFactory;
 
     /**
+     * Worker iterations
+     *
+     * @var integer
+     */
+    protected $iterations = 100;
+
+    /**
      * Constructor
      *
      * @param MetadataFactory $metadataFactory
@@ -68,6 +75,7 @@ class WorkerExecutor
         }
 
         $this->workersCount++;
+        $this->iterations = $metadata->getWorkerIterations();
     }
 
     /**
@@ -79,7 +87,8 @@ class WorkerExecutor
     {
         if ($this->workersCount > 0) {
             $output->writeln('GearmanWorker <comment>waiting</comment> for job ...');
-            while ($this->gearmanWorker->work()) {
+            $iteration = 0;
+            while ($this->gearmanWorker->work() && ++$iteration < $this->iterations) {
                 if ($this->gearmanWorker->returnCode() != GEARMAN_SUCCESS) {
                     $output->writeln('GearmanWorker return <comment>code</comment>: <info>['.$this->gearmanWorker->returnCode().']</info>');
                     break;
