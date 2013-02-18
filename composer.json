@@ -7,14 +7,14 @@
     "authors": [
         {
             "name": "Ivannis Suárez Jérez",
-            "email": "ivan@ulabox.com",
+            "email": "ivan@ulabox.com"
         }
     ],
     "require": {
         "php": ">=5.3.3",
         "symfony/framework-bundle":  "~2.1",
         "doctrine/common":           ">=2.2.0,<2.5-dev",
-        "jms/metadata":              "dev-master"
+        "jms/metadata":              ">=0.11"
     },
     "require-dev": {
         "phpspec/phpspec2":     "dev-develop",
