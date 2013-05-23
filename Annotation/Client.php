@@ -20,7 +20,7 @@ class Client
      *
      * @var array
      */
-    protected $servers = array('127.0.0.1');
+    protected $servers = array();
 
     /**
      * Tasks name

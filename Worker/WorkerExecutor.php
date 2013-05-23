@@ -22,6 +22,13 @@ class WorkerExecutor
     protected $gearmanWorker;
 
     /**
+     * Worker servers name
+     *
+     * @var array
+     */
+    private $servers;
+
+    /**
      * Workers count
      *
      * @var integer
@@ -29,7 +36,7 @@ class WorkerExecutor
     protected $workersCount;
 
     /**
-     * The metadata factory
+     * The metadata factory class
      *
      * @var MetadataFactory
      */
@@ -47,11 +54,13 @@ class WorkerExecutor
      *
      * @param MetadataFactory $metadataFactory
      */
-    public function __construct(MetadataFactory $metadataFactory)
+    public function __construct(MetadataFactory $metadataFactory, $servers, $iterations)
     {
         $this->metadataFactory = $metadataFactory;
-        $this->gearmanWorker = new \GearmanWorker();
-        $this->workersCount = 0;
+        $this->gearmanWorker   = new \GearmanWorker();
+        $this->workersCount    = 0;
+        $this->servers         = $servers;
+        $this->iterations      = $iterations;
     }
 
     /**
@@ -61,12 +70,25 @@ class WorkerExecutor
      */
     public function addWorker(WorkerInterface $worker)
     {
-        /* @var $metadata ClassMetadata */
-        $metadata = $this->metadataFactory->getMetadataForClass(get_class($worker))->getOutsideClassMetadata();
+        $metadata   = $this->metadataFactory->getMetadataForClass(get_class($worker))->getOutsideClassMetadata();
+        $servers    = $this->servers;
+
+        $annotationServers = $metadata->getServers();
+        if (count($annotationServers) > 0) {
+            $servers = $annotationServers;
+        }
+
+        if ($annotationIterations = $metadata->getWorkerIterations()) {
+            $this->iterations = $annotationIterations;
+        }
 
         // add servers
-        foreach ($metadata->getServers() as $server) {
-            $this->gearmanWorker->addServer($server);
+        foreach ($servers as $server) {
+            $config = split(":", $server);
+            $host = $config[0];
+            $port = isset($config[1]) ? $config[1] : 4730;
+
+            $this->gearmanWorker->addServer($host, $port);
         }
 
         // register functions
@@ -75,7 +97,6 @@ class WorkerExecutor
         }
 
         $this->workersCount++;
-        $this->iterations = $metadata->getWorkerIterations();
     }
 
     /**

@@ -20,9 +20,24 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('ulabox_gearman');
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
+        $rootNode
+        ->children()
+            ->scalarNode('default_method')->defaultValue('doBackgroundJob')->cannotBeEmpty()->end()
+            ->scalarNode('client_dir')->defaultValue('Gearman/Client')->cannotBeEmpty()->end()
+            ->scalarNode('worker_dir')->defaultValue('Gearman/Worker')->cannotBeEmpty()->end()
+            ->scalarNode('iterations')->defaultValue(100)->cannotBeEmpty()->end()
+            ->arrayNode('servers')
+                ->info('Defines the gearman servers')
+                ->useAttributeAsKey('name')
+                ->requiresAtLeastOneElement()
+                ->prototype('array')
+                    ->children()
+                        ->scalarNode('host')->end()
+                        ->scalarNode('port')->end()
+                    ->end()
+                ->end()
+            ->end()
+        ->end();
 
         return $treeBuilder;
     }

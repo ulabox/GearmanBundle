@@ -13,14 +13,14 @@ class Worker
      *
      * @var array
      */
-    protected $servers = array('127.0.0.1');
+    protected $servers = array();
 
     /**
      * Worker iterations
      *
      * @var integer
      */
-    protected $iterations = 100;
+    protected $iterations = null;
 
     /**
      * Constructor

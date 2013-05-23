@@ -55,7 +55,7 @@ class GearmanManager
     {
         $this->kernel = $kernel;
         foreach ($kernel->getBundles() as $bundle) {
-            $path = $bundle->getPath().'/Worker';
+            $path = $bundle->getPath() . '/' . $kernel->getContainer()->getParameter('ulabox_gearman.worker_dir');
             if (is_dir($path)) {
                 // load workers
                 foreach ($workerLoader->loadFromDirectory($path, $bundle->getName()) as $worker) {
@@ -63,7 +63,7 @@ class GearmanManager
                 }
             }
 
-            $path = $bundle->getPath().'/Client';
+            $path = $bundle->getPath() . '/' . $kernel->getContainer()->getParameter('ulabox_gearman.client_dir');
             if (is_dir($path)) {
                 // load clients
                 foreach ($clientLoader->loadFromDirectory($path, $bundle->getName()) as $client) {
@@ -106,10 +106,12 @@ class GearmanManager
      */
     public function getWorker($namespace)
     {
-        $className = $this->getClassName($namespace, 'Worker');
+        $scope = str_replace('/', '\\', $this->kernel->getContainer()->getParameter('ulabox_gearman.worker_dir'));
+        $className = $this->getClassName($namespace, $scope);
         foreach ($this->workers as $worker) {
-            if (get_class($worker) == $className)
+            if (get_class($worker) == $className) {
                 return $worker;
+            }
         }
 
         return null;
@@ -124,7 +126,9 @@ class GearmanManager
      */
     public function hasWorker($namespace)
     {
-        $className = $this->getClassName($namespace, 'Worker');
+        $scope = str_replace('/', '\\', $this->kernel->getContainer()->getParameter('ulabox_gearman.worker_dir'));
+        $className = $this->getClassName($namespace, $scope);
+
         return isset($this->workers[$className]);
     }
 
@@ -318,7 +322,8 @@ class GearmanManager
      */
     public function getClient($namespace)
     {
-        $className = $this->getClassName($namespace, 'Client');
+        $scope = str_replace('/', '\\', $this->kernel->getContainer()->getParameter('ulabox_gearman.client_dir'));
+        $className = $this->getClassName($namespace, $scope);
 
         foreach ($this->clients as $client) {
             if (get_class($client) == $className)

@@ -19,7 +19,8 @@ class GearmanClientExecuteCommand extends ContainerAwareCommand
         $this->setName('gearman:client:execute')
         ->setDescription('Execute clients')
         ->addOption('client', null, InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The directory or file to load clients from.')
-        ->addOption('method', null, InputOption::VALUE_REQUIRED, 'The client method', 'doBackgroundJob')
+        ->addOption('worker', null, InputOption::VALUE_REQUIRED, 'The worker name')
+        ->addOption('method', null, InputOption::VALUE_REQUIRED, 'The client method')
         ->addOption('params', null, InputOption::VALUE_REQUIRED, 'The parameters passed to the worker', '{}')
         ->setHelp(<<<EOT
 The <info>{$this->getName()}</info> command execute clients from your bundles:
@@ -37,26 +38,40 @@ EOT
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->write("Starting <comment>clients</comment> \n");
-        $method = in_array(
-            $input->getOption('method'),
-            array(
-              'doBackgroundJob',
-              'doHighJob',
-              'doHighBackgroundJob',
-              'doLowJob',
-              'doLowBackgroundJob',
-              'doNormalJob',
-              'addTask',
-              'addTaskBackground',
-              'addTaskHigh',
-              'addTaskHighBackground',
-              'addTaskLow',
-              'addTaskLowBackground',
-              'runTasks'
-            )
-        ) ? $input->getOption('method') : 'doBackgroundJob';
+        $methods = array(
+          'doBackgroundJob',
+          'doHighJob',
+          'doHighBackgroundJob',
+          'doLowJob',
+          'doLowBackgroundJob',
+          'doNormalJob',
+          'addTask',
+          'addTaskBackground',
+          'addTaskHigh',
+          'addTaskHighBackground',
+          'addTaskLow',
+          'addTaskLowBackground',
+          'runTasks'
+        );
+
+        if (in_array($input->getOption('method'), $methods)) {
+          $method = $input->getOption('method');
+        } else {
+          $default = $this->getContainer()->getParameter('ulabox_gearman.default_method');
+          if (in_array($default, $methods)) {
+            $method = $default;
+          } else {
+            $method = 'doBackgroundJob';
+          }
+        }
 
         $params = json_decode($input->getOption('params'), true) !== null ? $input->getOption('params') : '';
+        $workerName = $input->getOption('worker');
+
+        $worker = null;
+        if ($workerName !== null) {
+          $worker = $this->getManager()->getWorker($workerName);
+        }
 
         $index = 0;
         if ($clients = $input->getOption('client')) {
@@ -66,9 +81,12 @@ EOT
 
                 if ($client = $this->getManager()->getClient($namespace)) {
                     $output->writeln('<comment>    > </comment><info>executing ['.++$index.'] '.$name.'</info>');
+                    if ($worker !== null) {
+                      $client->setWorker($worker);
+                    }
                     $client->{$method}($job, $params);
                 } else {
-                    $output->write("<info>There is no client with name</info> <comment>".$name."</comment> \n");
+                    $output->write("<info>There is no client with name</info> <comment>".($workerName !== null ? $workerName : $name)."</comment> \n");
                 }
             }
         }

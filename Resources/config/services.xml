@@ -26,14 +26,18 @@
 
         <service id="ulabox_gearman.loader.worker" class="%ulabox_gearman.loader.worker.class%">
             <argument type="service" id="ulabox_gearman.metadata_factory" />
-        </service>
-
-        <service id="ulabox_gearman.executor.worker" class="%ulabox_gearman.executor.worker.class%">
-            <argument type="service" id="ulabox_gearman.metadata_factory" />
+            <argument>%ulabox_gearman.servers%</argument>
         </service>
 
         <service id="ulabox_gearman.loader.client" class="%ulabox_gearman.loader.client.class%">
             <argument type="service" id="ulabox_gearman.metadata_factory" />
+            <argument>%ulabox_gearman.servers%</argument>
+        </service>
+
+        <service id="ulabox_gearman.executor.worker" class="%ulabox_gearman.executor.worker.class%">
+            <argument type="service" id="ulabox_gearman.metadata_factory" />
+            <argument>%ulabox_gearman.servers%</argument>
+            <argument>%ulabox_gearman.iterations%</argument>
         </service>
 
         <service id="ulabox_gearman.manager" class="%ulabox_gearman.manager.class%">

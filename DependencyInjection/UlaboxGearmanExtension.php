@@ -24,5 +24,20 @@ class UlaboxGearmanExtension extends Extension
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
+
+        $servers = array();
+        if (count($config['servers']) > 0 ) {
+            foreach ($config['servers'] as $serverName => $server) {
+                $servers[] = $server['host'] . ($server['port'] ? ':'.$server['port'] : '');
+            }
+        } else {
+            $servers[] = '127.0.0.1:4730';
+        }
+
+        $container->setParameter('ulabox_gearman.default_method', $config['default_method']);
+        $container->setParameter('ulabox_gearman.client_dir', $config['client_dir']);
+        $container->setParameter('ulabox_gearman.worker_dir', $config['worker_dir']);
+        $container->setParameter('ulabox_gearman.iterations', $config['iterations']);
+        $container->setParameter('ulabox_gearman.servers', $servers);
     }
 }

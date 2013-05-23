@@ -8,7 +8,7 @@ use Metadata\MetadataFactory;
 class Client implements ClientInterface
 {
     /**
-     * Client worker name
+     * Client worker
      *
      * @var string
      */
@@ -19,7 +19,7 @@ class Client implements ClientInterface
      *
      * @var array
      */
-    private $servers = array('127.0.0.1');
+    private $servers;
 
     /**
      * The gearman client instance
@@ -36,6 +36,13 @@ class Client implements ClientInterface
     protected $metadata;
 
     /**
+     * The metadata factory
+     *
+     * @var MetadataFactory
+     */
+    protected $metadataFactory;
+
+    /**
      * The gearman manager
      *
      * @var GearmanManager
@@ -47,10 +54,17 @@ class Client implements ClientInterface
      *
      * @param MetadataFactory $metadataFactory
      */
-    public final function __construct(MetadataFactory $metadataFactory)
+    public final function __construct(MetadataFactory $metadataFactory, $servers)
     {
-        $this->metadata = $metadataFactory->getMetadataForClass(get_class($this))->getOutsideClassMetadata();
-        $this->servers = $this->metadata->getServers();
+        $this->metadata        = $metadataFactory->getMetadataForClass(get_class($this))->getOutsideClassMetadata();
+        $this->metadataFactory = $metadataFactory;
+
+        $annotationServers = $this->metadata->getServers();
+        if (count($annotationServers) > 0) {
+            $this->servers = $annotationServers;
+        } else {
+            $this->servers = $servers;
+        }
 
         $this->gearmanClient = new \GearmanClient();
         $this->addServers();
@@ -62,6 +76,14 @@ class Client implements ClientInterface
     public function setManager(GearmanManager $manager)
     {
         $this->manager = $manager;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setWorker(WorkerInterface $worker)
+    {
+        $this->worker = $worker;
     }
 
     /**
@@ -88,7 +110,11 @@ class Client implements ClientInterface
     private function addServers()
     {
         foreach ($this->servers as $server) {
-            $this->gearmanClient->addServer($server);
+            $config = split(":", $server);
+            $host = $config[0];
+            $port = isset($config[1]) ? $config[1] : 4730;
+
+            $this->gearmanClient->addServer($host, $port);
         }
     }
 
@@ -129,7 +155,17 @@ class Client implements ClientInterface
             return $jobName;
         }
 
-        return sprintf('%s:%s:%s', $this->metadata->getBundleName(), $this->metadata->getWorkerName(), $jobName);
+        $bundleName = $this->metadata->getBundleName();
+        $workerName = $this->metadata->getWorkerName();
+
+        if ($this->worker !== null) {
+            $metadata   = $this->metadataFactory->getMetadataForClass(get_class($this->worker))->getOutsideClassMetadata();
+            $className  = get_class($this->worker);
+            $workerName = substr($className, strrpos($className, '\\') + 1);
+            $bundleName = $metadata->getBundleName();
+        }
+
+        return sprintf('%s:%s:%s', $bundleName, $workerName, $jobName);
     }
 
     /**
@@ -146,8 +182,11 @@ class Client implements ClientInterface
         $jobName = $this->resolveJobName($jobName);
         $workerNamespace = $this->getWorkerNamespace($jobName);
 
-        if (!$this->manager->hasWorker($workerNamespace))
-            throw new \RuntimeException('There is not worker registered with name '.$workerNamespace);
+        if (!$this->manager->hasWorker($workerNamespace)) {
+            if ($this->worker == null) {
+                throw new \RuntimeException('There is not worker registered with name '.$workerNamespace);
+            }
+        }
     }
 
     /**
@@ -254,7 +293,7 @@ class Client implements ClientInterface
                     list($numerator, $denominator) = $this->getGearmanClient()->doStatus();
                     $callbackMethod = sprintf('%s_%s', $methodName, 'status');
                     if ($this->metadata->hasMethod($callbackMethod)) {
-                        $this->{$callbackMethod}($$numerator/$denominator);
+                        $this->{$callbackMethod}($numerator/$denominator);
                     }
                     break;
                 case GEARMAN_WORK_FAIL:

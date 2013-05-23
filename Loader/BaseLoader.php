@@ -21,13 +21,21 @@ abstract class BaseLoader implements LoaderInterface
     protected $metadataFactory;
 
     /**
+     * The configured servers.
+     *
+     * @var array
+     */
+    protected $servers = array();
+
+    /**
      * Constructor
      *
      * @param MetadataFactory $metadataFactory
      */
-    public function __construct(MetadataFactory $metadataFactory)
+    public function __construct(MetadataFactory $metadataFactory, $servers)
     {
         $this->metadataFactory = $metadataFactory;
+        $this->servers = $servers;
     }
 
     /**
@@ -70,7 +78,7 @@ abstract class BaseLoader implements LoaderInterface
                     $metadata->setBundleName($bundleName);
 
                     if ($metadata->isClient()) {
-                        $resource = new $className($this->metadataFactory);
+                        $resource = new $className($this->metadataFactory, $this->servers);
                     } else {
                         $resource = new $className;
                     }
