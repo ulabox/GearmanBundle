@@ -10,7 +10,7 @@ use Metadata\MetadataFactory;
 /**
  * Worker executor
  *
- * @author Ivannis Suárez Jérez <ivan@ulabox.com>
+ * @author Ivannis Suárez Jérez <ivannis.suarez@gmail.com>
  */
 class WorkerExecutor
 {

@@ -2,6 +2,11 @@
 
 namespace Ulabox\Bundle\GearmanBundle\Model;
 
+/**
+ * Interface for ordered worker.
+ *
+ * @author Ivannis Suárez Jérez <ivannis.suarez@gmail.com>
+ */
 interface OrderedWorkerInterface
 {
     /**

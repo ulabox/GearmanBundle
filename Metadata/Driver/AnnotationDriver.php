@@ -8,7 +8,9 @@ use Metadata\Driver\DriverInterface;
 use Metadata\MethodMetadata;
 
 /**
- * AnnotationDriver class
+ * Annotation driver.
+ *
+ * @author Ivannis Suárez Jérez <ivannis.suarez@gmail.com>
  */
 class AnnotationDriver implements DriverInterface
 {

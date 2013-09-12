@@ -3,8 +3,12 @@
 namespace Ulabox\Bundle\GearmanBundle\Annotation;
 
 /**
+ * Worker annotation class.
+ *
  * @Annotation
  * @Target("CLASS")
+ *
+ * @author Ivannis Suárez Jérez <ivannis.suarez@gmail.com>
  */
 class Worker
 {

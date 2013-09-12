@@ -8,7 +8,9 @@ use Metadata\ClassMetadata as BaseClassMetadata;
 use Metadata\MethodMetadata;
 
 /**
- * Metadata class
+ * Metadata class.
+ *
+ * @author Ivannis Suárez Jérez <ivannis.suarez@gmail.com>
  */
 class ClassMetadata extends BaseClassMetadata
 {

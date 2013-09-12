@@ -4,6 +4,11 @@ namespace Ulabox\Bundle\GearmanBundle\Loader;
 
 use Metadata\MetadataFactory;
 
+/**
+ * Base class loader.
+ *
+ * @author Ivannis Suárez Jérez <ivannis.suarez@gmail.com>
+ */
 abstract class BaseLoader implements LoaderInterface
 {
     /**
@@ -30,7 +35,8 @@ abstract class BaseLoader implements LoaderInterface
     /**
      * Constructor
      *
-     * @param MetadataFactory $metadataFactory
+     * @param MetadataFactory $metadataFactory The metadata factory
+     * @param array           $servers         The list of servers
      */
     public function __construct(MetadataFactory $metadataFactory, $servers)
     {
@@ -41,7 +47,9 @@ abstract class BaseLoader implements LoaderInterface
     /**
      * Find resources classes in a given directory and load them.
      *
-     * @param string $dir Directory to find resource classes in.
+     * @param string $dir        Directory to find resource classes in.
+     * @param string $bundleName The bundle name
+     *
      * @return array $resources Array of loaded resource object instances
      */
     public function loadFromDirectory($dir, $bundleName)
@@ -53,10 +61,7 @@ abstract class BaseLoader implements LoaderInterface
         $resources = array();
         $includedFiles = array();
 
-        $iterator = new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator($dir),
-                \RecursiveIteratorIterator::LEAVES_ONLY
-        );
+        $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir), \RecursiveIteratorIterator::LEAVES_ONLY);
 
         foreach ($iterator as $file) {
             if (($fileName = $file->getBasename($this->fileExtension)) == $file->getBasename()) {

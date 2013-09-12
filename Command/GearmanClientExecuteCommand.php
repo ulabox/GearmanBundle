@@ -12,6 +12,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Metadata\MetadataFactory;
 
+/**
+ * Client execute command.
+ *
+ * @author Ivannis Suárez Jérez <ivannis.suarez@gmail.com>
+ */
 class GearmanClientExecuteCommand extends ContainerAwareCommand
 {
     protected function configure()

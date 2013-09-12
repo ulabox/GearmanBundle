@@ -4,6 +4,11 @@ namespace Ulabox\Bundle\GearmanBundle\Loader;
 
 use Ulabox\Bundle\GearmanBundle\Metadata\ClassMetadata;
 
+/**
+ * Client class loader.
+ *
+ * @author Ivannis Suárez Jérez <ivannis.suarez@gmail.com>
+ */
 class ClientLoader extends BaseLoader implements LoaderInterface
 {
     /**
@@ -12,9 +17,12 @@ class ClientLoader extends BaseLoader implements LoaderInterface
     public function implementInterface($className)
     {
         $rc = new \ReflectionClass($className);
-        if ($rc->isAbstract()) return true;
+        if ($rc->isAbstract()) {
+            return true;
+        }
 
         $interfaces = $rc->getInterfaceNames();
+
         return in_array('Ulabox\Bundle\GearmanBundle\Model\ClientInterface', $interfaces) ? true : false;
     }
 

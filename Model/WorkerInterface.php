@@ -4,6 +4,11 @@ namespace Ulabox\Bundle\GearmanBundle\Model;
 
 use Ulabox\Bundle\GearmanBundle\Manager\GearmanManager;
 
+/**
+ * Interface for gearman worker.
+ *
+ * @author Ivannis Suárez Jérez <ivannis.suarez@gmail.com>
+ */
 interface WorkerInterface
 {
     /**

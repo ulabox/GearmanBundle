@@ -5,6 +5,11 @@ namespace Ulabox\Bundle\GearmanBundle\Model;
 use Ulabox\Bundle\GearmanBundle\Manager\GearmanManager;
 use Metadata\MetadataFactory;
 
+/**
+ * Default gearman client.
+ *
+ * @author Ivannis Suárez Jérez <ivannis.suarez@gmail.com>
+ */
 class Client implements ClientInterface
 {
     /**
@@ -52,7 +57,8 @@ class Client implements ClientInterface
     /**
      * Constructor
      *
-     * @param MetadataFactory $metadataFactory
+     * @param MetadataFactory $metadataFactory The metadata factory
+     * @param array           $servers         The list of servers
      */
     public final function __construct(MetadataFactory $metadataFactory, $servers)
     {

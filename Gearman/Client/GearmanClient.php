@@ -6,9 +6,11 @@ use Ulabox\Bundle\GearmanBundle\Annotation\Client;
 use Ulabox\Bundle\GearmanBundle\Model\Client as BaseClient;
 
 /**
- * The client
+ * Base gearman client.
  *
  * @Client()
+ *
+ * @author Ivannis Suárez Jérez <ivannis.suarez@gmail.com>
  */
 class GearmanClient extends BaseClient
 {

@@ -14,6 +14,11 @@
         <parameter key="ulabox_gearman.executor.worker.class">Ulabox\Bundle\GearmanBundle\Worker\WorkerExecutor</parameter>
 
         <parameter key="ulabox_gearman.manager.class">Ulabox\Bundle\GearmanBundle\Manager\GearmanManager</parameter>
+
+        <parameter key="ulabox_gearman.event_dispatcher_async.class">Ulabox\Bundle\GearmanBundle\Dispatcher\EventDispatcherAsync</parameter>
+        <parameter key="ulabox_gearman.event_async.class">Ulabox\Bundle\GearmanBundle\Dispatcher\EventAsync</parameter>
+        <parameter key="ulabox_gearman.event_async_factory.class">Ulabox\Bundle\GearmanBundle\Dispatcher\EventAsyncFactory</parameter>
+        <parameter key="ulabox_gearman.controller.event_async.class">Ulabox\Bundle\GearmanBundle\Controller\EventAsyncController</parameter>
     </parameters>
 
     <services>
@@ -41,10 +46,26 @@
         </service>
 
         <service id="ulabox_gearman.manager" class="%ulabox_gearman.manager.class%">
-        	<argument type="service" id="kernel" />
+            <argument type="service" id="kernel" />
             <argument type="service" id="ulabox_gearman.loader.worker" />
             <argument type="service" id="ulabox_gearman.loader.client" />
         </service>
-    </services>
 
+        <service id="ulabox_gearman.event_async" class="%ulabox_gearman.event_async.class%">
+            <argument type="service" id="ulabox_gearman.manager" />
+        </service>
+
+        <service id="ulabox_gearman.event_dispatcher_async" class="%ulabox_gearman.event_dispatcher_async.class%">
+            <argument type="service" id="service_container" />
+        </service>
+
+        <service id="ulabox_gearman.event_async_factory" class="%ulabox_gearman.event_async_factory.class%">
+        </service>
+
+        <service id="ulabox_gearman.controller.event_async" class="%ulabox_gearman.controller.event_async.class%">
+            <call method="setContainer">
+                <argument type="service" id="service_container" />
+            </call>
+        </service>
+    </services>
 </container>

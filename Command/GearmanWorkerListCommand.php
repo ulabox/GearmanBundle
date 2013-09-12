@@ -9,7 +9,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Metadata\MetadataFactory;
 
-
+/**
+ * Worker list command.
+ *
+ * @author Ivannis Suárez Jérez <ivannis.suarez@gmail.com>
+ */
 class GearmanWorkerListCommand extends ContainerAwareCommand
 {
     protected function configure()

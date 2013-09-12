@@ -3,8 +3,12 @@
 namespace Ulabox\Bundle\GearmanBundle\Annotation;
 
 /**
+ * Client annotation class.
+ *
  * @Annotation
  * @Target("CLASS")
+ *
+ * @author Ivannis Suárez Jérez <ivannis.suarez@gmail.com>
  */
 class Client
 {
@@ -36,14 +40,17 @@ class Client
      */
     public function __construct(array $data)
     {
-        if (isset($data['worker']))
+        if (isset($data['worker'])) {
             $this->worker = $data['worker'];
+        }
 
-        if (isset($data['servers']))
+        if (isset($data['servers'])) {
             $this->servers = $data['servers'];
+        }
 
-        if (isset($data['tasks']))
+        if (isset($data['tasks'])) {
             $this->tasks = $data['tasks'];
+        }
     }
 
     /**

@@ -8,7 +8,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 /**
  * This is the class that validates and merges configuration from your app/config files
  *
- * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html#cookbook-bundles-extension-config-class}
+ * @author Ivannis Suárez Jérez <ivannis.suarez@gmail.com>
  */
 class Configuration implements ConfigurationInterface
 {
@@ -22,6 +22,7 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
         ->children()
+            ->scalarNode('enable_asynchronous_event_dispatcher')->defaultValue(false)->cannotBeEmpty()->end()
             ->scalarNode('default_method')->defaultValue('doBackgroundJob')->cannotBeEmpty()->end()
             ->scalarNode('client_dir')->defaultValue('Gearman/Client')->cannotBeEmpty()->end()
             ->scalarNode('worker_dir')->defaultValue('Gearman/Worker')->cannotBeEmpty()->end()

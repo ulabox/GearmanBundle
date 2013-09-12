@@ -7,6 +7,11 @@ use Ulabox\Bundle\GearmanBundle\Model\WorkerInterface;
 use Ulabox\Bundle\GearmanBundle\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
+/**
+ * Manager class for manipulate workers and clients.
+ *
+ * @author Ivannis Suárez Jérez <ivannis.suarez@gmail.com>
+ */
 class GearmanManager
 {
     /**
@@ -51,6 +56,13 @@ class GearmanManager
      */
     protected $kernel;
 
+    /**
+     * Constructor.
+     *
+     * @param KernelInterface $kernel       The kernel instance
+     * @param LoaderInterface $workerLoader The worker loader
+     * @param LoaderInterface $clientLoader The client loader
+     */
     public function __construct(KernelInterface $kernel, LoaderInterface $workerLoader, LoaderInterface $clientLoader)
     {
         $this->kernel = $kernel;
@@ -100,7 +112,7 @@ class GearmanManager
     /**
      * Get worker
      *
-     * @param string $namespace
+     * @param string $namespace The worker namespace
      *
      * @return WorkerInterface
      */
@@ -120,7 +132,7 @@ class GearmanManager
     /**
      * Has worker?
      *
-     * @param string $className
+     * @param string $namespace The worker namespace
      *
      * @return boolean
      */
@@ -135,7 +147,7 @@ class GearmanManager
     /**
      * Add a worker object instance to the loader.
      *
-     * @param WorkerInterface $worker
+     * @param WorkerInterface $worker The worker instance
      */
     public function addWorker(WorkerInterface $worker)
     {
@@ -143,10 +155,12 @@ class GearmanManager
 
         if (!isset($this->workers[$workerClass])) {
             if ($worker instanceof OrderedWorkerInterface && $worker instanceof DependentWorkerInterface) {
-                throw new \InvalidArgumentException(sprintf('Class "%s" can\'t implement "%s" and "%s" at the same time.',
-                        get_class($worker),
-                        'OrderedWorkerInterface',
-                        'DependentWorkerInterface'));
+                throw new \InvalidArgumentException(sprintf(
+                    'Class "%s" can\'t implement "%s" and "%s" at the same time.',
+                    get_class($worker),
+                    'OrderedWorkerInterface',
+                    'DependentWorkerInterface'
+                ));
             } elseif ($worker instanceof OrderedWorkerInterface) {
                 $this->orderWorkersByNumber = true;
             } elseif ($worker instanceof DependentWorkerInterface) {
@@ -195,12 +209,14 @@ class GearmanManager
                 if ($a->getOrder() === $b->getOrder()) {
                     return 0;
                 }
+
                 return $a->getOrder() < $b->getOrder() ? -1 : 1;
             } elseif ($a instanceof OrderedWorkerInterface) {
                 return $a->getOrder() === 0 ? 0 : 1;
             } elseif ($b instanceof OrderedWorkerInterface) {
                 return $b->getOrder() === 0 ? 0 : -1;
             }
+
             return 0;
         });
     }
@@ -224,7 +240,7 @@ class GearmanManager
         if ($this->orderWorkersByNumber) {
             $count = count($this->orderedWorkers);
 
-            for ($i = 0 ; $i < $count ; ++$i) {
+            for ($i = 0; $i < $count; ++$i) {
                 if (!($this->orderedWorkers[$i] instanceof OrderedWorkerInterface)) {
                     unset($this->orderedWorkers[$i]);
                 }
@@ -300,6 +316,13 @@ class GearmanManager
         $this->orderedWorkers = array_merge($this->orderedWorkers, $orderedWorkers);
     }
 
+    /**
+     * Validate class dependencies.
+     *
+     * @param array $dependenciesClasses Array of dependencies classes
+     *
+     * @return boolean
+     */
     private function validateDependencies($dependenciesClasses)
     {
         $loadedWorkerClasses = array_keys($this->workers);
@@ -316,7 +339,7 @@ class GearmanManager
     /**
      * Get client
      *
-     * @param string $namespance
+     * @param string $namespace The client namespace
      *
      * @return ClientInterface
      */
@@ -326,8 +349,9 @@ class GearmanManager
         $className = $this->getClassName($namespace, $scope);
 
         foreach ($this->clients as $client) {
-            if (get_class($client) == $className)
+            if (get_class($client) == $className) {
                 return $client;
+            }
         }
 
         return null;
@@ -336,7 +360,7 @@ class GearmanManager
     /**
      * Has client?
      *
-     * @param string $className
+     * @param string $className The class name
      *
      * @return boolean
      */
@@ -348,7 +372,7 @@ class GearmanManager
     /**
      * Add a client object instance to the loader.
      *
-     * @param ClientInterface $client
+     * @param ClientInterface $client The client instance
      */
     public function addClient(ClientInterface $client)
     {
@@ -372,8 +396,10 @@ class GearmanManager
     /**
      * Get the real class name for a given namespace and scope
      *
-     * @param string $namespace
-     * @param string $scope
+     * @param string $namespace The class namespace
+     * @param string $scope     The scope
+     *
+     * @return string
      */
     private function getClassName($namespace, $scope)
     {

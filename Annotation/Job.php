@@ -4,8 +4,12 @@ namespace Ulabox\Bundle\GearmanBundle\Annotation;
 
 
 /**
+ * Job annotation class.
+ *
  * @Annotation
  * @Target("METHOD")
+ *
+ * @author Ivannis Suárez Jérez <ivannis.suarez@gmail.com>
  */
 class Job
 {
@@ -23,8 +27,9 @@ class Job
      */
     public function __construct(array $data)
     {
-        if (isset($data['name']))
+        if (isset($data['name'])) {
             $this->name = $data['name'];
+        }
     }
 
     /**

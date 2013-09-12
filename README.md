@@ -106,12 +106,12 @@ ulabox_gearman:
 Writing Simple Worker
 ------------------
 
-For a bundle located at src/Acme/HelloBundle, the worker classes by default should live inside src/Acme/HelloBundle/Gearman/Worker. We can create a simple worker as shown below:
+For a bundle located at src/Acme/DemoBundle, the worker classes by default should live inside src/Acme/DemoBundle/Gearman/Worker. We can create a simple worker as shown below:
 
 ```
 <?php
 
-namespace Acme\HelloBundle\Gearman\Worker;
+namespace Acme\DemoBundle\Gearman\Worker;
 
 use Ulabox\Bundle\GearmanBundle\Model\ContainerAwareWorker;
 use Ulabox\Bundle\GearmanBundle\Annotation\Worker;
@@ -182,7 +182,7 @@ $gearmanManager = $this->container->get('ulabox_gearman.manager');
 $client = $gearmanManager->getClient('UlaboxGearmanBundle:GearmanClient');
 
 // find your worker
-$worker = $gearmanManager->getWorker('AcmeHelloBundle:AcmeWorker');
+$worker = $gearmanManager->getWorker('AcmeDemoBundle:AcmeWorker');
 
 // now you should tell the client that worker must be run
 $client->setWorker($worker);
@@ -197,7 +197,7 @@ $client->doNormalJob('hello_world', json_encode(array('foo' => 'bar')));
 To view the result open a console and run the command:
 
 ```
-$ php app/console gearman:worker:execute --worker=AcmeHelloBundle:AcmeWorker
+$ php app/console gearman:worker:execute --worker=AcmeDemoBundle:AcmeWorker
 ```
 Then run the code above.
 
@@ -206,13 +206,13 @@ Then run the code above.
 Open the first console and run:
 
 ```
-$ php app/console gearman:worker:execute --worker=AcmeHelloBundle:AcmeWorker
+$ php app/console gearman:worker:execute --worker=AcmeDemoBundle:AcmeWorker
 ```
 
 Now open another console and run:
 
 ```
-$ php app/console gearman:client:execute --client=UlaboxGearmanBundle:GearmanClient:hello_world --worker=AcmeHelloBundle:AcmeWorker --params="{\"foo\": \"bar\" }"
+$ php app/console gearman:client:execute --client=UlaboxGearmanBundle:GearmanClient:hello_world --worker=AcmeDemoBundle:AcmeWorker --params="{\"foo\": \"bar\" }"
 ```
 
 The commands come with a few options, you can see more details in the commands section.
@@ -227,7 +227,7 @@ Annotations
 ```
 <?php
 
-namespace Acme\HelloBundle\Gearman\Worker;
+namespace Acme\DemoBundle\Gearman\Worker;
 
 use Ulabox\Bundle\GearmanBundle\Model\ContainerAwareWorker;
 use Ulabox\Bundle\GearmanBundle\Annotation\Worker;
@@ -251,7 +251,7 @@ class AcmeWorker extends ContainerAwareWorker
 ```
 <?php
 
-namespace Acme\HelloBundle\Gearman\Client;
+namespace Acme\DemoBundle\Gearman\Client;
 
 use Ulabox\Bundle\GearmanBundle\Annotation\Client;
 use Ulabox\Bundle\GearmanBundle\Model\Client as BaseClient;
@@ -272,7 +272,7 @@ class AcmeClient extends BaseClient
 ```
 <?php
 
-namespace Acme\HelloBundle\Gearman\Worker;
+namespace Acme\DemoBundle\Gearman\Worker;
 
 use Ulabox\Bundle\GearmanBundle\Model\ContainerAwareWorker;
 use Ulabox\Bundle\GearmanBundle\Annotation\Worker;
@@ -303,12 +303,12 @@ class AcmeWorker extends ContainerAwareWorker
 Writing Simple Client
 ------------------
 
-For a bundle located at src/Acme/HelloBundle, the client classes by default should live inside src/Acme/HelloBundle/Gearman/Client. The client class by default is associated with the Worker class with the same name, for example, the AcmeClient will be associated with AcmeWorker:
+For a bundle located at src/Acme/DemoBundle, the client classes by default should live inside src/Acme/DemoBundle/Gearman/Client. The client class by default is associated with the Worker class with the same name, for example, the AcmeClient will be associated with AcmeWorker:
 
 ```
 <?php
 
-namespace Acme\HelloBundle\Gearman\Client;
+namespace Acme\DemoBundle\Gearman\Client;
 
 use Ulabox\Bundle\GearmanBundle\Annotation\Client;
 use Ulabox\Bundle\GearmanBundle\Model\Client as BaseClient;
@@ -354,7 +354,7 @@ Once your job have been written, can be run in two ways:
 $gearmanManager = $this->container->get('ulabox_gearman.manager');
 
 // get the acme client
-$client = $gearmanManager->getClient('AcmeHelloBundle:AcmeClient');
+$client = $gearmanManager->getClient('AcmeDemoBundle:AcmeClient');
 
 // and finally do the job
 $client->doNormalJob('hello_world', json_encode(array('foo' => 'bar')));
@@ -366,7 +366,7 @@ $client->doNormalJob('hello_world', json_encode(array('foo' => 'bar')));
 To view the result open a console and run the command:
 
 ```
-$ php app/console gearman:worker:execute --worker=AcmeHelloBundle:AcmeWorker
+$ php app/console gearman:worker:execute --worker=AcmeDemoBundle:AcmeWorker
 ```
 Then run the code above.
 
@@ -375,13 +375,13 @@ Then run the code above.
 Open the first console and run:
 
 ```
-$ php app/console gearman:worker:execute --worker=AcmeHelloBundle:AcmeWorker
+$ php app/console gearman:worker:execute --worker=AcmeDemoBundle:AcmeWorker
 ```
 
 Now open another console and run:
 
 ```
-$ php app/console gearman:client:execute --client=AcmeHelloBundle:AcmeClient:hello_world  --params="{\"foo\": \"bar\" }"
+$ php app/console gearman:client:execute --client=AcmeDemoBundle:AcmeClient:hello_world  --params="{\"foo\": \"bar\" }"
 ```
 
 Run Tasks
@@ -391,7 +391,7 @@ Add a task to be run in parallel with other tasks is very simple. Adding to the 
 ```
 <?php
 
-namespace Acme\HelloBundle\Gearman\Worker;
+namespace Acme\DemoBundle\Gearman\Worker;
 
 use Ulabox\Bundle\GearmanBundle\Model\ContainerAwareWorker;
 use Ulabox\Bundle\GearmanBundle\Annotation\Worker;
@@ -469,7 +469,7 @@ Once your job have been written, can be run as show below:
 $gearmanManager = $this->container->get('ulabox_gearman.manager');
 
 // get the acme client
-$client = $gearmanManager->getClient('AcmeHelloBundle:AcmeClient');
+$client = $gearmanManager->getClient('AcmeDemoBundle:AcmeClient');
 
 // add multiple background tasks
 $client->addTaskBackground('hello_world', json_encode(array('foo' => 'bar')));
@@ -482,7 +482,7 @@ $client->runTasks();
 To view the result open a console and run the command:
 
 ```
-$ php app/console gearman:worker:execute --worker=AcmeHelloBundle:AcmeWorker
+$ php app/console gearman:worker:execute --worker=AcmeDemoBundle:AcmeWorker
 ```
 Then run the code above.
 
@@ -505,4 +505,185 @@ Execute a worker:
 
 ```
 $ php app/console gearman:worker:execute --help
+```
+
+Asynchronous Events
+------------------
+
+Exploiting the potential of Gearman Job Server, we have introduced a new EventDispatcherAsync that replaces the default symfony EventDispatcher, the new dispatcher has a new method called dispatchAsync that sends the event to the gearman queue, gearman processes it and sends it back to the php application, which finally reconstructs the event and run it asynchronously.
+
+#### Configuration
+
+To use asynchronous events the first thing to do is import the routing.yml file of the gearman bundle.
+
+```
+# app/config/routing.yml
+gearman_bundle:
+    resource: @UlaboxGearmanBundle/Resources/config/routing.yml
+    prefix:   /_gearman
+```
+
+And add the route in the access control from your security.yml file.
+```
+# app/config/security.yml
+security:
+    # ...
+    access_control:
+        - { path: ^/_gearman*, roles: IS_AUTHENTICATED_ANONYMOUSLY, ips: [127.0.0.1, ::1] }
+```
+
+Enable the asynchronous event dispatcher in your config.yml.
+```
+# app/config/config.yml
+ulabox_gearman:
+    enable_asynchronous_event_dispatcher: true
+```
+
+The EventWorker is responsible for processing the event and send it back to the app. This worker needs to generate a url from the command line, and this requires us setup the request context globally.
+```
+# app/config/parameters.yml
+parameters:
+    router.request_context.host: example.org
+    router.request_context.scheme: https
+    router.request_context.base_url: my/path
+```
+
+Now that everything is configured the following step is run the EventWorker in the command line
+```
+$ php app/console gearman:worker:execute --worker=UlaboxGearmanBundle:EventWorker
+```
+
+> The EventWorker should always be running, so we recommend using a tool such as the [supervisor](http://supervisord.org/) to ensure that the worker is always running.
+
+#### Writing an async Event
+
+An async Event is a simple event with the only difference that must implement the interface Ulabox\Bundle\GearmanBundle\Dispatcher\AsyncEventInterface. Here we show a small example:
+
+
+```
+<?php
+
+namespace Acme\DemoBundle\Event;
+
+use Ulabox\Bundle\GearmanBundle\Dispatcher\AsyncEventInterface;
+use Symfony\Component\EventDispatcher\Event;
+use Acme\DemoBundle\Entity\User;
+
+/**
+ * The custom async event.
+ */
+class FooEvent extends Event implements AsyncEventInterface
+{
+    /**
+     * The user entity
+     *
+     * @var User
+     */
+    protected $user;
+
+    /**
+     * Construstor.
+     *
+     * @param User $user The user instance
+     */
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getArguments()
+    {
+        return array(
+            'user' => $this->user
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setArguments(array $args = array())
+    {
+        $this->user = $args['user'];
+    }
+}
+```
+
+Note that the class implements the two AsyncEventInterface methods (getArguments, setArguments), these are used internally to reconstruct the event.
+
+##### Create an Event Listener
+
+```
+<?php
+
+namespace Acme\DemoBundle\EventListener;
+
+use Acme\DemoBundle\Event\FooEvent;
+
+/**
+ * Foo listener
+ */
+class FooListener
+{
+    /**
+     * Listener on foo event
+     *
+     * @param FooEvent $event The event
+     */
+    public function onFoo(FooEvent $event)
+    {
+        $user = $event->getUser();
+        // do something
+    }
+}
+```
+
+Now that the class is created, you just need to register it as a service:
+```
+# app/config/config.yml
+services:
+    acme.listener.foo_event:
+        class: Acme\DemoBundle\EventListener\FooListener
+        tags:
+            - { name: kernel.event_listener, event: foo.event, method: onFoo }
+```
+
+##### Dispatch the Event
+
+The dispatchAsync() method begins the process and notifies asynchronously all listeners of the given event
+```
+<?php
+
+namespace Acme\DemoBundle\Controller;
+
+use Acme\DemoBundle\Event\FooEvent;
+
+/**
+ * Demo controller
+ */
+class DemoController
+{
+    public function someAction()
+    {
+        ...
+
+        $user = $this->get('security.context')->getToken()->getUser();
+        $eventDispatcher = $this->get('event_dispatcher');
+
+        // dispatch the event
+        $eventDispatcher->dispatchAsync('foo.event', new FooEvent($user));
+
+        ...
+    }
+}
 ```
