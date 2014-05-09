@@ -74,21 +74,23 @@ abstract class BaseLoader implements LoaderInterface
         $declared = get_declared_classes();
 
         foreach ($declared as $className) {
-            $reflClass = new \ReflectionClass($className);
-            $sourceFile = $reflClass->getFileName();
-            $metadata = $this->metadataFactory->getMetadataForClass($className)->getOutsideClassMetadata();
-
-            if (in_array($sourceFile, $includedFiles) && $this->implementInterface($className)) {
-                if ($this->hasAnnotation($metadata)) {
-                    $metadata->setBundleName($bundleName);
-
-                    if ($metadata->isClient()) {
-                        $resource = new $className($this->metadataFactory, $this->servers);
-                    } else {
-                        $resource = new $className;
+            if ($this->implementInterface($className)) {
+                $reflClass = new \ReflectionClass($className);
+                $sourceFile = $reflClass->getFileName();
+                $metadata = $this->metadataFactory->getMetadataForClass($className)->getOutsideClassMetadata();
+    
+                if (in_array($sourceFile, $includedFiles)) {
+                    if ($this->hasAnnotation($metadata)) {
+                        $metadata->setBundleName($bundleName);
+    
+                        if ($metadata->isClient()) {
+                            $resource = new $className($this->metadataFactory, $this->servers);
+                        } else {
+                            $resource = new $className;
+                        }
+    
+                        $resources[] = $resource;
                     }
-
-                    $resources[] = $resource;
                 }
             }
         }
