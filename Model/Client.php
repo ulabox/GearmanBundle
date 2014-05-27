@@ -116,7 +116,7 @@ class Client implements ClientInterface
     private function addServers()
     {
         foreach ($this->servers as $server) {
-            $config = split(":", $server);
+            $config = explode(":", $server);
             $host = $config[0];
             $port = isset($config[1]) ? $config[1] : 4730;
 
