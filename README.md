@@ -101,6 +101,12 @@ ulabox_gearman:
     # Define your clients location directory.
     # By default is set to Gearman/Client
     client_dir: MyClientDir
+
+    # Define the way the included event worker triggers the events
+    # cli for getting the event dispatcher, request for doing a curl 
+    # against the configured request_context URL
+    # By default is set to request
+    use_via: [cli|request]
 ```
 
 Writing Simple Worker

@@ -41,6 +41,7 @@ class EventDispatcherAsync extends ContainerAwareEventDispatcher implements Even
     protected function doDispatchAsync(Event $event)
     {
         $eventAsync = $this->getContainer()->get('ulabox_gearman.event_async');
+        $eventAsync->setUseVia($this->getContainer()->getParameter('ulabox_gearman.use_via'));
         $eventAsync->forward($event);
     }
 }
