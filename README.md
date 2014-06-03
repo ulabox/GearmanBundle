@@ -514,7 +514,7 @@ Exploiting the potential of Gearman Job Server, we have introduced a new EventDi
 
 #### Configuration
 
-To use asynchronous events the first thing to do is import the routing.yml file of the gearman bundle.
+To use asynchronous events yo can optionally send events via request, if so edit the routing.yml file of the gearman bundle.
 
 ```
 # app/config/routing.yml
@@ -523,7 +523,18 @@ gearman_bundle:
     prefix:   /_gearman
 ```
 
+For request processing the event and send it back to the app. This worker needs to generate a url from the command line, and this requires us setup the request context globally.
+
+```
+# app/config/parameters.yml
+parameters:
+    router.request_context.host: example.org
+    router.request_context.scheme: https
+    router.request_context.base_url: my/path
+```
+
 And add the route in the access control from your security.yml file.
+
 ```
 # app/config/security.yml
 security:
@@ -539,18 +550,23 @@ ulabox_gearman:
     enable_asynchronous_event_dispatcher: true
 ```
 
-The EventWorker is responsible for processing the event and send it back to the app. This worker needs to generate a url from the command line, and this requires us setup the request context globally.
+Or you can enable the cli async event dispatcher instead.
 ```
-# app/config/parameters.yml
-parameters:
-    router.request_context.host: example.org
-    router.request_context.scheme: https
-    router.request_context.base_url: my/path
+# app/config/config.yml
+ulabox_gearman:
+    enable_asynchronous_cli_event_dispatcher: true
 ```
 
 Now that everything is configured the following step is run the EventWorker in the command line
+
 ```
 $ php app/console gearman:worker:execute --worker=UlaboxGearmanBundle:EventWorker
+```
+
+If you decided to use the cli EventWorker use this line instead :
+
+```
+$ php app/console gearman:worker:execute --worker=UlaboxGearmanBundle:CliEventWorker
 ```
 
 > The EventWorker should always be running, so we recommend using a tool such as the [supervisor](http://supervisord.org/) to ensure that the worker is always running.
