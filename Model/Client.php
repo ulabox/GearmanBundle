@@ -349,6 +349,11 @@ class Client implements ClientInterface
         $callbackMethod = sprintf('%s_%s', $methodName, 'complete');
         if ($this->metadata->hasMethod($callbackMethod)) {
             $this->getGearmanClient()->setCompleteCallback(array($this, $callbackMethod));
+        } else {
+            $callbackMethod = 'complete';
+            if ($this->metadata->hasMethod($callbackMethod)) {
+                $this->getGearmanClient()->setCompleteCallback(array($this, $callbackMethod));
+            }
         }
 
         $callbackMethod = sprintf('%s_%s', $methodName, 'fail');
@@ -374,7 +379,7 @@ class Client implements ClientInterface
         $jobName = $this->resolveJobName($jobName);
         $this->registerCallbacks($jobName);
 
-        $this->getGearmanClient()->addTask($jobName, $params, $unique);
+        $this->getGearmanClient()->addTask($jobName, $params, null, $unique);
 
         return $this;
     }
@@ -394,7 +399,7 @@ class Client implements ClientInterface
         $jobName = $this->resolveJobName($jobName);
         $this->registerCallbacks($jobName);
 
-        $this->getGearmanClient()->addTaskBackground($jobName, $params, $unique);
+        $this->getGearmanClient()->addTaskBackground($jobName, $params, null, $unique);
 
         return $this;
     }
@@ -414,7 +419,7 @@ class Client implements ClientInterface
         $jobName = $this->resolveJobName($jobName);
         $this->registerCallbacks($jobName);
 
-        $this->getGearmanClient()->addTaskHigh($jobName, $params, $unique);
+        $this->getGearmanClient()->addTaskHigh($jobName, $params, null, $unique);
 
         return $this;
     }
@@ -434,7 +439,7 @@ class Client implements ClientInterface
         $jobName = $this->resolveJobName($jobName);
         $this->registerCallbacks($jobName);
 
-        $this->getGearmanClient()->addTaskHighBackground($jobName, $params, $unique);
+        $this->getGearmanClient()->addTaskHighBackground($jobName, $params, null, $unique);
 
         return $this;
     }
@@ -454,7 +459,7 @@ class Client implements ClientInterface
         $jobName = $this->resolveJobName($jobName);
         $this->registerCallbacks($jobName);
 
-        $this->getGearmanClient()->addTaskLow($jobName, $params, $unique);
+        $this->getGearmanClient()->addTaskLow($jobName, $params, null, $unique);
 
         return $this;
     }
@@ -474,7 +479,7 @@ class Client implements ClientInterface
         $jobName = $this->resolveJobName($jobName);
         $this->registerCallbacks($jobName);
 
-        $this->getGearmanClient()->addTaskLowBackground($jobName, $params, $unique);
+        $this->getGearmanClient()->addTaskLowBackground($jobName, $params, null, $unique);
 
         return $this;
     }
