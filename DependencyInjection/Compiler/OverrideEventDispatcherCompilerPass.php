@@ -21,6 +21,9 @@ class OverrideEventDispatcherCompilerPass implements CompilerPassInterface
         if ($container->getParameterBag()->get('ulabox_gearman.enable_asynchronous_event_dispatcher')) {
             $container->setDefinition('event_dispatcher', $container->getDefinition('ulabox_gearman.event_dispatcher_async'));
             $container->removeDefinition('ulabox_gearman.event_dispatcher_async');
+        } else if ($container->getParameterBag()->get('ulabox_gearman.enable_asynchronous_cli_event_dispatcher')) {
+            $container->setDefinition('event_dispatcher', $container->getDefinition('ulabox_gearman.cli_event_dispatcher_async'));
+            $container->removeDefinition('ulabox_gearman.cli_event_dispatcher_async');
         }
     }
 }

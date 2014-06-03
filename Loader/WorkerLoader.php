@@ -16,14 +16,7 @@ class WorkerLoader extends BaseLoader implements LoaderInterface
      */
     public function implementInterface($className)
     {
-        $rc = new \ReflectionClass($className);
-        if ($rc->isAbstract()) {
-            return true;
-        }
-
-        $interfaces = $rc->getInterfaceNames();
-
-        return in_array('Ulabox\Bundle\GearmanBundle\Model\WorkerInterface', $interfaces) ? true : false;
+        return is_subclass_of($className, 'Ulabox\Bundle\GearmanBundle\Model\WorkerInterface');
     }
 
     /**

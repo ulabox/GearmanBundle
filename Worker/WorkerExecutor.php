@@ -84,9 +84,9 @@ class WorkerExecutor
 
         // add servers
         foreach ($servers as $server) {
-            $config = split(":", $server);
-            $host = $config[0];
-            $port = isset($config[1]) ? $config[1] : 4730;
+            $details = parse_url($server);
+            $host = $details['host'];
+            $port = isset($details['port']) ? $details['port'] : 4730;
 
             $this->gearmanWorker->addServer($host, $port);
         }

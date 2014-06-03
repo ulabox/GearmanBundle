@@ -23,6 +23,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
         ->children()
             ->scalarNode('enable_asynchronous_event_dispatcher')->defaultValue(false)->cannotBeEmpty()->end()
+            ->scalarNode('enable_asynchronous_cli_event_dispatcher')->defaultValue(false)->cannotBeEmpty()->end()
             ->scalarNode('default_method')->defaultValue('doBackgroundJob')->cannotBeEmpty()->end()
             ->scalarNode('client_dir')->defaultValue('Gearman/Client')->cannotBeEmpty()->end()
             ->scalarNode('worker_dir')->defaultValue('Gearman/Worker')->cannotBeEmpty()->end()

@@ -35,6 +35,7 @@ class UlaboxGearmanExtension extends Extension
         }
 
         $container->setParameter('ulabox_gearman.enable_asynchronous_event_dispatcher', $config['enable_asynchronous_event_dispatcher']);
+        $container->setParameter('ulabox_gearman.enable_asynchronous_cli_event_dispatcher', $config['enable_asynchronous_cli_event_dispatcher']);
         $container->setParameter('ulabox_gearman.default_method', $config['default_method']);
         $container->setParameter('ulabox_gearman.client_dir', $config['client_dir']);
         $container->setParameter('ulabox_gearman.worker_dir', $config['worker_dir']);

@@ -16,6 +16,7 @@
         <parameter key="ulabox_gearman.manager.class">Ulabox\Bundle\GearmanBundle\Manager\GearmanManager</parameter>
 
         <parameter key="ulabox_gearman.event_dispatcher_async.class">Ulabox\Bundle\GearmanBundle\Dispatcher\EventDispatcherAsync</parameter>
+        <parameter key="ulabox_gearman.cli_event_dispatcher_async.class">Ulabox\Bundle\GearmanBundle\Dispatcher\CliEventDispatcherAsync</parameter>
         <parameter key="ulabox_gearman.event_async.class">Ulabox\Bundle\GearmanBundle\Dispatcher\EventAsync</parameter>
         <parameter key="ulabox_gearman.event_async_factory.class">Ulabox\Bundle\GearmanBundle\Dispatcher\EventAsyncFactory</parameter>
         <parameter key="ulabox_gearman.controller.event_async.class">Ulabox\Bundle\GearmanBundle\Controller\EventAsyncController</parameter>
@@ -56,6 +57,10 @@
         </service>
 
         <service id="ulabox_gearman.event_dispatcher_async" class="%ulabox_gearman.event_dispatcher_async.class%">
+            <argument type="service" id="service_container" />
+        </service>
+
+        <service id="ulabox_gearman.cli_event_dispatcher_async" class="%ulabox_gearman.cli_event_dispatcher_async.class%">
             <argument type="service" id="service_container" />
         </service>
 
