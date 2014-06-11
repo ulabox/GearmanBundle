@@ -13,6 +13,14 @@ use Symfony\Component\EventDispatcher\Event;
  */
 class EventAsync implements EventAsyncInterface
 {
+    const GEARMAN_CLIENT_CLASS_ALIAS = 'UlaboxGearmanBundle:GearmanClient';
+    const GEARMAN_WORKER_CLASS_ALIAS = 'UlaboxGearmanBundle:EventWorker';
+
+    /**
+     * @var string
+     */
+    protected $useVia;
+
     /**
      * The gearman manager
      *
@@ -31,6 +39,38 @@ class EventAsync implements EventAsyncInterface
     }
 
     /**
+     * @param $useVia
+     */
+    public function setUseVia($useVia)
+    {
+        $this->useVia = $useVia;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUseVia()
+    {
+        return $this->useVia;
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getGearmanClient()
+    {
+        return $this->manager->getClient(self::GEARMAN_CLIENT_CLASS_ALIAS);
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getGearmanWorker()
+    {
+        return $this->manager->getWorker(self::GEARMAN_WORKER_CLASS_ALIAS);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function forward(Event $event)
@@ -40,10 +80,10 @@ class EventAsync implements EventAsyncInterface
         }
 
         // get the generic gearman client
-        $client = $this->manager->getClient('UlaboxGearmanBundle:GearmanClient');
+        $client = $this->getGearmanClient();
 
         // find the event worker
-        $worker = $this->manager->getWorker('UlaboxGearmanBundle:EventWorker');
+        $worker = $this->getGearmanWorker();
 
         // now you should tell the client that worker must be run
         $client->setWorker($worker);

@@ -116,9 +116,9 @@ class Client implements ClientInterface
     private function addServers()
     {
         foreach ($this->servers as $server) {
-            $config = explode(":", $server);
-            $host = $config[0];
-            $port = isset($config[1]) ? $config[1] : 4730;
+            $details = parse_url($server);
+            $host = $details['host'];
+            $port = isset($details['port']) ? $details['port'] : 4730;
 
             $this->gearmanClient->addServer($host, $port);
         }
