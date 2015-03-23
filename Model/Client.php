@@ -286,7 +286,7 @@ class Client implements ClientInterface
         $methodName = $this->getMethodName($jobName);
 
         do {
-            $result = $this->getGearmanClient()->do($jobName, $params, $unique);
+            $result = $this->getGearmanClient()->doNormal($jobName, $params, $unique);
 
             switch($this->getGearmanClient()->returnCode()) {
                 case GEARMAN_WORK_DATA:
