@@ -2,7 +2,7 @@
 # (c) Ivannis Suárez Jérez
 #
 gearman_bundle_async_event_handle:
-    pattern: /async-event/handle
+    path: /async-event/handle
     methods:  [POST]
     defaults:
         _controller: ulabox_gearman.controller.event_async:handleAction
