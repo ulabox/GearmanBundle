@@ -12,8 +12,8 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "symfony/framework-bundle":  "~2.1",
-        "doctrine/common":           ">=2.2.0,<2.5-dev",
+        "symfony/framework-bundle":  "~2.3",
+        "doctrine/common":           "~2.2",
         "jms/metadata":              ">=0.11",
         "jms/serializer-bundle":     "0.12.*@dev"
     },
